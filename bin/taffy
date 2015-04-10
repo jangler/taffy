@@ -3,40 +3,69 @@
 require 'optparse'
 require 'taglib'
 
+VERSION = [0, 0, 0]
+
 FIELDS = [
-  ['album',   String],
-  ['artist',  String],
-  ['comment', String],
-  ['genre',   String],
-  ['title',   String],
-  ['track',   Integer],
-  ['year',    Integer],
+  ['l', 'album',   String],
+  ['r', 'artist',  String],
+  ['c', 'comment', String],
+  ['g', 'genre',   String],
+  ['t', 'title',   String],
+  ['n', 'track',   Integer],
+  ['y', 'year',    Integer],
 ]
 
 actions = []
 status = 0
 
-OptionParser.new do |opts|
-  opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [option ...] file ..."
+options = OptionParser.new do |opts|
+  opts.banner += " file ..."
 
-  FIELDS.each do |field|
-    opts.on("--#{field[0]} #{field[0].upcase}", field[1]) do |x|
-      actions << ->(y) { y.send("#{field[0]}=", x) }
+  opts.separator ""
+  opts.separator "Tag options:"
+
+  FIELDS.each do |f|
+    short = "-#{f[0]}#{f[1].upcase}"
+    long = "--#{f[1]}=#{f[1].upcase}"
+    opts.on(short, long, f[2], "Set #{f[1]} tag") do |x|
+      actions << ->(r) { r.send("#{f[0]}=", x) }
     end
   end
-end.parse!
+
+  opts.separator ""
+  opts.separator "If no tag options are given, file tags are printed instead."
+  opts.separator ""
+  opts.separator "Other options:"
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+
+  opts.on_tail("--version", "Show version") do
+    puts VERSION.join('.')
+    exit
+  end
+end
+
+begin
+  options.parse!
+rescue OptionParser::ParseError => err
+  warn(err)
+  exit(1)
+end
 
 if ARGV.empty?
-  warn("No files specified.")
-  status = 1
+  puts options
+  exit(1)
 end
 
 def print_info(filename, tag)
   puts filename
 
-  FIELDS.each do |field|
-    value = tag.send(field[0])
-    puts "#{field[0]}:#{' '*(8 - field[0].size)}#{value}" if value && value != 0
+  FIELDS.each do |f|
+    value = tag.send(f[1])
+    puts "#{f[1]}:#{' ' * (8 - f[1].size)}#{value}" if value && value != 0
   end
 
   puts
