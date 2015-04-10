@@ -28,7 +28,7 @@ options = OptionParser.new do |opts|
     short = "-#{f[0]}#{f[1].upcase}"
     long = "--#{f[1]}=#{f[1].upcase}"
     opts.on(short, long, f[2], "Set #{f[1]} tag") do |x|
-      actions << ->(r) { r.send("#{f[0]}=", x) }
+      actions << ->(r) { r.send("#{f[1]}=", x) }
     end
   end
 
