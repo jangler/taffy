@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'taglib'
+
+FIELDS = [
+  ['album',   String],
+  ['artist',  String],
+  ['comment', String],
+  ['genre',   String],
+  ['title',   String],
+  ['track',   Integer],
+  ['year',    Integer],
+]
+
+actions = []
+status = 0
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [option ...] file ..."
+
+  FIELDS.each do |field|
+    opts.on("--#{field[0]} #{field[0].upcase}", field[1]) do |x|
+      actions << ->(y) { y.send("#{field[0]}=", x) }
+    end
+  end
+end.parse!
+
+if ARGV.empty?
+  warn("No files specified.")
+  status = 1
+end
+
+def print_info(filename, tag)
+  puts filename
+
+  FIELDS.each do |field|
+    value = tag.send(field[0])
+    puts "#{field[0]}:#{' '*(8 - field[0].size)}#{value}" if value && value != 0
+  end
+
+  puts
+end
+
+ARGV.each do |filename|
+  TagLib::FileRef.open(filename) do |fileref|
+    if fileref.null?
+      warn("Could not open file: #{filename}")
+      status = 2
+    else
+      tag = fileref.tag
+      if actions.empty?
+        print_info(filename, tag)
+      else
+        actions.each { |action| action.call(tag) } 
+        fileref.save
+      end
+    end
+  end
+end
+
+exit(status)
