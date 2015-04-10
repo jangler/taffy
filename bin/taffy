@@ -3,7 +3,7 @@
 require 'optparse'
 require 'taglib'
 
-VERSION = [0, 0, 0]
+VERSION = [0, 1, 0]
 
 FIELDS = [
   ['l', 'album',   String],
@@ -76,14 +76,14 @@ ARGV.each do |filename|
     if fileref.null?
       warn("Could not open file: #{filename}")
       status = 2
+      next
+    end
+
+    if actions.empty?
+      print_info(filename, fileref.tag)
     else
-      tag = fileref.tag
-      if actions.empty?
-        print_info(filename, tag)
-      else
-        actions.each { |action| action.call(tag) } 
-        fileref.save
-      end
+      actions.each { |action| action.call(fileref.tag) }
+      fileref.save
     end
   end
 end
