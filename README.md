@@ -21,6 +21,14 @@ Usage
 		-t, --title=TITLE                Set title tag
 		-n, --track=TRACK                Set track tag
 		-y, --year=YEAR                  Set year tag
+			--no-album                   Clear album tag
+			--no-artist                  Clear artist tag
+			--no-comment                 Clear comment tag
+			--no-genre                   Clear genre tag
+			--no-title                   Clear title tag
+			--no-track                   Clear track tag
+			--no-year                    Clear year tag
+			--clear                      Clear all tags
 
 	If no tag options are given, file tags are printed instead.
 
@@ -30,6 +38,4 @@ Usage
 
 Etymology
 ---------
-It was originally called "avid", for "audio/video identification", but
-that sounded like something that would have an Enterprise Edition. Taffy
-tags audio files for you, and is a lot tastier.
+Taffy tags audio files for you.

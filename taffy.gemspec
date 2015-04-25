@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'taffy'
   s.version     = '0.1.0'
-  s.date        = '2015-04-10'
+  s.date        = '2015-04-25'
   s.summary     = 'command-line media tagging interface'
   s.description = "A command-line interface for reading and writing audio \
                    metadata.".squeeze(' ')
