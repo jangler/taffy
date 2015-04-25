@@ -32,6 +32,19 @@ options = OptionParser.new do |opts|
     end
   end
 
+  FIELDS.each do |f|
+    long = "--no-#{f[1]}"
+    opts.on(long, "Clear #{f[1]} tag") do
+      actions << ->(r) { r.send("#{f[1]}=", f[2] == String ? nil : 0) }
+    end
+  end
+
+  opts.on("--clear", "Clear all tags") do
+    FIELDS.each do |f|
+      actions << ->(r) { r.send("#{f[1]}=", f[2] == String ? nil : 0) }
+    end
+  end
+
   opts.separator ""
   opts.separator "If no tag options are given, file tags are printed instead."
   opts.separator ""
