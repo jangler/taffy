@@ -38,6 +38,10 @@ Usage
 
 Examples
 --------
+Print tags from an audio file:
+	
+	taffy song.mp3
+
 Tag an audio file with a title:
 
 	taffy -t "Queen of the Mole People" song.mp3
@@ -45,10 +49,6 @@ Tag an audio file with a title:
 Tag a series of files with an artist, album, and year:
 
 	taffy -r Deerhoof -l "The Man, The King, The Girl" -y 1997 *.mp3
-
-Clear tags from a file:
-	
-	taffy --clear song.mp3
 
 Etymology
 ---------
