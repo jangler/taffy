@@ -2,8 +2,8 @@ Gem::Specification.new do |s|
   s.name        = 'taffy'
   s.version     = '1.0.0'
   s.date        = '2015-04-26'
-  s.summary     = 'command-line media tagging interface'
-  s.description = "A command-line interface for reading and writing audio \
+  s.summary     = 'A command-line media tagging tool'
+  s.description = "A command-line tool for reading and writing audio \
                    metadata.".squeeze(' ')
   s.authors     = ['Brandon Mulcahy']
   s.email       = 'brandon@jangler.info'
