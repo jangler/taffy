@@ -3,7 +3,7 @@
 require 'optparse'
 require 'taglib'
 
-VERSION = [0, 1, 0]
+VERSION = [1, 0, 0]
 
 FIELDS = [
   ['l', 'album',   String],

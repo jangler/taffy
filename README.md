@@ -7,7 +7,7 @@ files, along with a few other file formats I've never used.
 
 Installation
 ------------
-	TODO
+	gem install taffy
 
 Usage
 -----
@@ -35,6 +35,20 @@ Usage
 	Other options:
 		-h, --help                       Show this message
 			--version                    Show version
+
+Examples
+--------
+Tag an audio file with a title:
+
+	taffy -t "Queen of the Mole People" song.mp3
+
+Tag a series of files with an artist, album, and year:
+
+	taffy -r Deerhoof -l "The Man, The King, The Girl" -y 1997 *.mp3
+
+Clear tags from a file:
+	
+	taffy --clear song.mp3
 
 Etymology
 ---------
