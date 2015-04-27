@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name        = 'taffy'
-  s.version     = '1.0.0'
-  s.date        = '2015-04-26'
-  s.summary     = 'A command-line media tagging tool'
+  s.version     = '1.1.0'
+  s.date        = '2015-04-27'
+  s.summary     = 'A command-line audio tagging tool'
   s.description = "A command-line tool for reading and writing audio \
                    metadata.".squeeze(' ')
   s.authors     = ['Brandon Mulcahy']
