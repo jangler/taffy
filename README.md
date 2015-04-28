@@ -18,39 +18,40 @@ package](https://aur.archlinux.org/packages/taffy/).
 
 Usage
 -----
-    Usage: taffy [options] file ...
-
-    Tag options:
-        -l, --album ALBUM                Set album tag
-        -r, --artist ARTIST              Set artist tag
-        -c, --comment COMMENT            Set comment tag
-        -g, --genre GENRE                Set genre tag
-        -t, --title TITLE                Set title tag
-        -n, --track TRACK                Set track tag
-        -y, --year YEAR                  Set year tag
-            --no-album                   Clear album tag
-            --no-artist                  Clear artist tag
-            --no-comment                 Clear comment tag
-            --no-genre                   Clear genre tag
-            --no-title                   Clear title tag
-            --no-track                   Clear track tag
-            --no-year                    Clear year tag
-            --clear                      Clear all tags
-
-    Filename options:
-            --rename SPEC                Rename file based on tags
-
-    If no options are given, file tags are printed instead.
-
-    In a filename spec, a sequence such as %R or %r stands for
-    the corresponding tag, in this case the artist name. %R
-    leaves letter case intact, while %r downcases the tag. A
-    sequence such as %_t maps special characters in the tag
-    to the given substitute, in this case an underscore.
-
-    Other options:
-        -h, --help                       Show this message and exit
-            --version                    Show version and exit
+	Usage: taffy [options] file ...
+	
+	Tag options:
+	    -l, --album ALBUM                Set album tag
+	    -r, --artist ARTIST              Set artist tag
+	    -c, --comment COMMENT            Set comment tag
+	    -g, --genre GENRE                Set genre tag
+	    -t, --title TITLE                Set title tag
+	    -n, --track TRACK                Set track tag
+	    -y, --year YEAR                  Set year tag
+	        --no-album                   Clear album tag
+	        --no-artist                  Clear artist tag
+	        --no-comment                 Clear comment tag
+	        --no-genre                   Clear genre tag
+	        --no-title                   Clear title tag
+	        --no-track                   Clear track tag
+	        --no-year                    Clear year tag
+	        --clear                      Clear all tags
+	
+	Filename options:
+	        --extract SPEC               Extract tags from filename
+	        --rename SPEC                Rename file based on tags
+	
+	If no options are given, file tags are printed instead.
+	
+	In a filename spec, a sequence such as %R or %r stands for
+	the corresponding tag, in this case the artist name. In a
+	filename, %R leaves letter case intact, while %r downcases
+	the tag. A sequence such as %_t maps special characters in
+	the tag to the given substitute, in this case an underscore.
+	
+	Other options:
+	    -h, --help                       Show this message and exit
+	        --version                    Show version and exit
 
 Examples
 --------

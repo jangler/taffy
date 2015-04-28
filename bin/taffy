@@ -18,8 +18,8 @@ FIELDS = [
 ]
 
 actions = []
-rename_spec = nil
-status = 0
+extract_spec = rename_spec = nil
+$status = 0
 
 options = OptionParser.new do |opts|
   opts.banner += " file ..."
@@ -49,6 +49,9 @@ options = OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Filename options:"
 
+  opts.on("--extract SPEC", String, "Extract tags from filename") do |spec|
+    extract_spec = spec
+  end
   opts.on("--rename SPEC", String, "Rename file based on tags") do |spec|
     rename_spec = spec
   end
@@ -57,10 +60,10 @@ options = OptionParser.new do |opts|
   opts.separator "If no options are given, file tags are printed instead."
   opts.separator ""
   opts.separator "In a filename spec, a sequence such as %R or %r stands for"
-  opts.separator "the corresponding tag, in this case the artist name. %R"
-  opts.separator "leaves letter case intact, while %r downcases the tag. A"
-  opts.separator "sequence such as %_t maps special characters in the tag"
-  opts.separator "to the given substitute, in this case an underscore."
+  opts.separator "the corresponding tag, in this case the artist name. In a"
+  opts.separator "filename, %R leaves letter case intact, while %r downcases"
+  opts.separator "the tag. A sequence such as %_t maps special characters in"
+  opts.separator "the tag to the given substitute, in this case an underscore."
   opts.separator ""
   opts.separator "Other options:"
 
@@ -98,6 +101,30 @@ def print_info(filename, tag)
   puts
 end
 
+def extract(tag, spec, filename)
+  name = File.basename(filename)
+  name = name.slice(0, name.size - File.extname(name).size)
+  regexp = Regexp.new(spec.gsub(/%(\W|_)?([lrcgt])/, '(.+)').
+                           gsub(/%(\W|_)?([ny])/, '(\d+)'))
+  if filematch = regexp.match(name)
+    i = 1
+    loop do
+      specmatch = /%(?:\W|_)?([lrcgtny])/.match(spec)
+      break unless specmatch
+      FIELDS.each do |f|
+        next if f[0] != specmatch[1]
+        val = 'ny'.include?(f[0]) ? filematch[i].to_i : filematch[i]
+        tag.send("#{f[1]}=", val)
+      end
+      spec = specmatch.post_match
+      i += 1
+    end
+  else
+    warn("#{filename} did not match extraction spec")
+    $status = 2
+  end
+end
+
 def rename(tag, spec)
   spec = spec.dup
 
@@ -117,13 +144,18 @@ ARGV.each do |filename|
   TagLib::FileRef.open(filename) do |fileref|
     if fileref.null?
       warn("Could not open file: #{filename}")
-      status = 2
+      $status = 2
       next
     end
 
-    if actions.empty? and !rename_spec
+    if extract_spec
+      extract(fileref.tag, extract_spec, filename)
+      fileref.save
+    end
+
+    if actions.empty? and !(extract_spec or rename_spec)
       print_info(filename, fileref.tag)
-    else
+    elsif !actions.empty?
       actions.each { |action| action.call(fileref.tag) }
       fileref.save
     end
@@ -133,6 +165,7 @@ ARGV.each do |filename|
       path = File.join(File.dirname(filename), name)
       if File.exist?(path)
         warn("Cannot rename; file exists: #{name}")
+        $status = 2
       else
         File.rename(filename, path)
       end
@@ -140,4 +173,4 @@ ARGV.each do |filename|
   end
 end
 
-exit(status)
+exit($status)
