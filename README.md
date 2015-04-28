@@ -7,7 +7,14 @@ other file formats I've never used.
 
 Installation
 ------------
+If installing via `gem`, you must have already installed your
+distribution's TagLib package, usually called `taglib`, `taglib-devel`,
+or `libtag1-dev`. Then run:
+
 	gem install taffy
+
+If you use Arch Linux or a derivative, you may also install via the [AUR
+package](https://aur.archlinux.org/packages/taffy/).
 
 Usage
 -----
