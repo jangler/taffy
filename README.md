@@ -2,8 +2,8 @@ Taffy
 =====
 Taffy is a command-line tool for reading and writing audio metadata, as
 supported by [TagLib](http://taglib.github.io/). That means it can edit
-tags for MP3, Ogg Vorbis, FLAC, WAV, and MP4 files, along with a few
-other file formats I've never used.
+tags for MP3, Ogg Vorbis, FLAC, WAV, and MP4 files, along with several
+other file formats.
 
 Installation
 ------------
