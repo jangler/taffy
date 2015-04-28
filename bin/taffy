@@ -130,7 +130,12 @@ ARGV.each do |filename|
 
     if rename_spec
       name = rename(fileref.tag, rename_spec) + File.extname(filename)
-      File.rename(filename, File.join(File.dirname(filename), name))
+      path = File.join(File.dirname(filename), name)
+      if File.exist?(path)
+        warn("Cannot rename; file exists: #{name}")
+      else
+        File.rename(filename, path)
+      end
     end
   end
 end
