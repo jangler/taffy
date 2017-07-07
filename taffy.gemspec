@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'taffy'
-  s.version     = '1.3.1'
+  s.version     = '1.3.0'
   s.date        = '2017-07-07'
   s.summary     = 'A command-line audio tagging tool'
   s.description = "A command-line tool for reading and writing audio \
