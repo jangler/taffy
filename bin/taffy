@@ -5,7 +5,7 @@ require 'shellwords'
 
 require 'taglib'
 
-VERSION = [1, 2, 1]
+VERSION = [1, 3, 0]
 
 FIELDS = [
   ['l', 'album',   String],
@@ -168,6 +168,8 @@ ARGV.each do |filename|
 
     if rename_spec
       name = rename(fileref.tag, rename_spec) + File.extname(filename)
+      name.gsub!('/', '-') # problematic on unix
+      name.gsub!(':', '')  # problematic on windows
       path = File.join(File.dirname(filename), name)
       if File.exist?(path)
         warn("Cannot rename; file exists: #{name}")
