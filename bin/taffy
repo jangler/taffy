@@ -131,6 +131,11 @@ def extract(tag, spec, filename)
   end
 end
 
+def strip_special_chars(str, subchar)
+  str.delete("'").gsub(/[ `~!@#$%^&*()=+[{}\\|;:",<.>\/?]|\\]/, subchar)
+    .gsub(/(#{subchar})+/, subchar).gsub(/(^#{subchar}|#{subchar}$)/, '') || '_'
+end
+
 def rename(tag, spec)
   spec = spec.dup
 
@@ -139,8 +144,7 @@ def rename(tag, spec)
     tag_string = tag_string.rjust(2, '0') if f[1] == 'track'
     spec.gsub!(/%(\W|_)?(#{f[0]}|#{f[0].upcase})/) do |match|
       sub = $2 == f[0] ? tag_string.downcase : tag_string
-      sub = sub.shellescape.gsub(/(\\.)|[\/:]/, $1 || '')
-      sub == '' ? '_' : sub
+      strip_special_chars(sub, $1 || '')
     end
   end
 
