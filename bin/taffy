@@ -17,8 +17,11 @@ FIELDS = [
   ['y', 'year',    Integer],
 ]
 
+RENAME_CHARS = /[ `~!#$%^&*()=[{}\\|;:",<>\/?]|\\]/
+RENAME_FS_CHARS = /[<>:"\/\\|?*]/
+
 actions = []
-extract_spec = rename_spec = nil
+extract_spec = rename_spec = special_chars = nil
 $status = 0
 
 options = OptionParser.new do |opts|
@@ -60,6 +63,11 @@ options = OptionParser.new do |opts|
   end
   opts.on("--rename SPEC", String, "Rename file based on tags") do |spec|
     rename_spec = spec
+    special_chars = RENAME_CHARS
+  end
+  opts.on("--rename-fs SPEC", String, "Like --rename; see below") do |spec|
+    rename_spec = spec
+    special_chars = RENAME_FS_CHARS
   end
 
   opts.separator ""
@@ -70,6 +78,9 @@ options = OptionParser.new do |opts|
   opts.separator "filename, %R leaves letter case intact, while %r downcases"
   opts.separator "the tag. A sequence such as %_t maps special characters in"
   opts.separator "the tag to the given substitute, in this case an underscore."
+  opts.separator "--rename remaps all characters that need to be escaped in"
+  opts.separator "the shell, while --rename-fs remaps only characters that"
+  opts.separator "are invalid in filenames."
   opts.separator ""
   opts.separator "Other options:"
 
@@ -131,12 +142,14 @@ def extract(tag, spec, filename)
   end
 end
 
-def strip_special_chars(str, subchar)
-  str.delete("'").gsub(/[ `~!@#$%^&*()=+[{}\\|;:",<.>\/?]|\\]/, subchar)
-    .gsub(/(#{subchar})+/, subchar).gsub(/(^#{subchar}|#{subchar}$)/, '') || '_'
+def strip_special_chars(str, subchar, special_chars)
+  # removing single quotes is usually better than remapping them
+  str.delete(special_chars == RENAME_CHARS ? "'" : '')
+    .gsub(special_chars, subchar).gsub(/(#{subchar})+/, subchar)
+    .gsub(/(^#{subchar}|#{subchar}$)/, '') || '_'
 end
 
-def rename(tag, spec)
+def rename(tag, spec, special_chars)
   spec = spec.dup
 
   FIELDS.each do |f|
@@ -144,7 +157,7 @@ def rename(tag, spec)
     tag_string = tag_string.rjust(2, '0') if f[1] == 'track'
     spec.gsub!(/%(\W|_)?(#{f[0]}|#{f[0].upcase})/) do |match|
       sub = $2 == f[0] ? tag_string.downcase : tag_string
-      strip_special_chars(sub, $1 || '')
+      strip_special_chars(sub, $1 || '', special_chars)
     end
   end
 
@@ -184,7 +197,8 @@ ARGV.each do |filename|
     end
 
     if rename_spec
-      name = rename(fileref.tag, rename_spec) + File.extname(filename)
+      name = rename(fileref.tag, rename_spec, special_chars) +
+        File.extname(filename)
       path = File.join(File.dirname(filename), name)
       if File.exist?(path)
         warn("Cannot rename; file exists: #{name}")
