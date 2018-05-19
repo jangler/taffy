@@ -40,6 +40,7 @@ Usage
 	Filename options:
 	        --extract SPEC               Extract tags from filename
 	        --rename SPEC                Rename file based on tags
+	        --rename-fs SPEC             Like --rename; see below
 	
 	If no options are given, file tags are printed instead.
 	
@@ -48,6 +49,9 @@ Usage
 	filename, %R leaves letter case intact, while %r downcases
 	the tag. A sequence such as %_t maps special characters in
 	the tag to the given substitute, in this case an underscore.
+	--rename remaps all characters that need to be escaped in
+	the shell, while --rename-fs remaps only characters that
+	are invalid in filenames.
 	
 	Other options:
 	    -h, --help                       Show this message and exit
