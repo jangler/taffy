@@ -69,7 +69,7 @@ Tag a series of files with an artist, album, and year:
 
 Tag an audio file, then rename it to "14 - Queen of the Mole People.mp3":
 
-	taffy -n 14 -t "Queen of the Mole People" --rename "%n - %T" song.mp3
+	taffy -n 14 -t "Queen of the Mole People" --rename-fs "%n - %T" song.mp3
 
 Etymology
 ---------
