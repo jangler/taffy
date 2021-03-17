@@ -5,7 +5,7 @@ require 'shellwords'
 
 require 'taglib'
 
-VERSION = [1, 4, 0]
+VERSION = [1, 4, 2]
 
 FIELDS = [
   ['l', 'album',   String],
