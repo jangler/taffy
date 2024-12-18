@@ -164,18 +164,6 @@ def rename(tag, spec, special_chars)
   spec
 end
 
-def safe_save(filename, fileref)
-  lowername = filename.downcase
-
-  if lowername.end_with?('.ogg') or lowername.end_with?('.oga')
-    warn("Not saving Ogg Vorbis file: #{filename} - see " +
-      "https://github.com/robinst/taglib-ruby/issues/82")
-    return false
-  else
-    return fileref.save
-  end
-end
-
 ARGV.each do |filename|
   TagLib::FileRef.open(filename) do |fileref|
     if fileref.null?
@@ -186,14 +174,14 @@ ARGV.each do |filename|
 
     if extract_spec
       extract(fileref.tag, extract_spec, filename)
-      $status = 2 if not safe_save(filename, fileref)
+      fileref.save
     end
 
     if actions.empty? and !(extract_spec or rename_spec)
       print_info(filename, fileref.tag)
     elsif !actions.empty?
       actions.each { |action| action.call(fileref.tag) }
-      $status = 2 if not safe_save(filename, fileref)
+      fileref.save
     end
 
     if rename_spec
